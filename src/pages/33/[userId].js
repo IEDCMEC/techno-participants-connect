@@ -31,7 +31,6 @@ const UserProfile = () => {
 
   async function fetchParticipantConnect() {
     setLoading(true)
-    const res = await axios.get(`/api/users/${userId}`)
 
     const { data } = await SupabaseClient.from("participant_connect").select(
       "*"
@@ -61,6 +60,7 @@ const UserProfile = () => {
     )
     console.log(selectedParticipantData)
     setUser(selectedParticipantData)
+    console.log({ userId })
 
     setLoading(false)
   }
@@ -91,7 +91,6 @@ const UserProfile = () => {
   }, [userId])
 
   if (loading) return <Loader />
-
 
   return (
     // <div>{JSON.stringify(user)}</div>
@@ -227,7 +226,9 @@ const UserProfile = () => {
             </div>
           </div>
         </>
-      ): <UserNotPublic />}
+      ) : (
+        <UserNotPublic />
+      )}
     </>
   )
 }
