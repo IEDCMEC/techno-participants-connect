@@ -11,42 +11,91 @@ import {
   FaLinkedinIn,
   FaGithub,
   FaDev,
-} from "react-icons/fa";
-import { FiGlobe, FiPhoneCall } from "react-icons/fi";
-import { HiPhone } from "react-icons/hi";
-import Error from "../404";
-import { CustomTitle } from "@/utils";
-import axios from "axios";
-import UserNotPublic from "@/components/UserNotPublic";
+} from "react-icons/fa"
+import { FiGlobe, FiPhoneCall } from "react-icons/fi"
+import { HiPhone } from "react-icons/hi"
+import Error from "../404"
+import { CustomTitle } from "@/utils"
+import axios from "axios"
+import UserNotPublic from "@/components/UserNotPublic"
+import SupabaseClient from "@/utils/SupabaseClient"
 
 const UserProfile = () => {
-  const router = useRouter();
-  console.log(router);
-  const { userId } = router.query;
-  console.log(router.query);
-  const [user, setUser] = useState({});
-  const [loading, setLoading] = useState(true);
-  const [view, setView] = useState(false);
+  const router = useRouter()
+  const { userId } = router.query
+  const [user, setUser] = useState({})
+  const [users, setUsers] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [view, setView] = useState(false)
+  const [participantConnect, setParticipantConnect] = useState([])
 
-  async function fetchUser() {
-    setLoading(true);
-    console.log({ userId });
-    if (userId) {
-      const res = await axios.get(`/api/getData?id=${userId}`);
-      if (res?.data?.user) {
-        setUser(res.data.user);
-        console.log(res.data.user);
-      }
-      setLoading(false);
-    }
+  async function fetchParticipantConnect() {
+    setLoading(true)
+    const res = await axios.get(`/api/users/${userId}`)
+
+    const { data } = await SupabaseClient.from("participant_connect").select(
+      "*"
+    )
+
+    setParticipantConnect(data)
+
+    // data.forEach((participant) => {
+    //   console.log("fsfds")
+
+    //   users.forEach((u) => {
+    //     if (participant.Email === u?.users?.email) {
+    //       console.log(user.users)
+    //     }
+    //   })
+    // })
+    
+    const { data:registerData } = await SupabaseClient.from("register")
+    .select("*, users(*) ")
+    .eq("band_id", userId)
+
+    
+    const selectedUser = registerData[0]?.users
+
+    const json = data
+    const selectedParticipantData = json.find(
+      (participant) => participant.Email === selectedUser?.email
+    )
+    console.log(selectedParticipantData)
+    setUser(selectedParticipantData)
+
+    setLoading(false)
   }
 
-  useEffect(() => {
-    fetchUser();
-  }, [userId]);
+  async function fetchUser() {
+    setLoading(true)
+    // const res = await axios.get(`/api/users/${userId}`)
 
-  if (loading) return <Loader />;
-  if (!user.Name) return <UserNotPublic />;
+    // if (res?.data?.user) {
+    //   setUser(res.data.user)
+    //   console.log(res.data.user)
+    // }
+
+    const { data } = await SupabaseClient.from("users").select("*")
+    setUsers(data)
+    setLoading(false)
+  }
+
+  async function getUser() {
+    console.log(userId)
+
+    console.log({ participantConnect, users })
+
+ 
+  }
+  useEffect(() => {
+    fetchUser()
+    fetchParticipantConnect()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [userId])
+
+  if (loading) return <Loader />
+  if (!user.Name) return <UserNotPublic />
+
   return (
     // <div>{JSON.stringify(user)}</div>
     <>
@@ -170,15 +219,14 @@ const UserProfile = () => {
               }}
             >
               If you are the owner of this profile and would like to update your
-              profile, please fill this form.
-            </div>
-            <div className={styles.users_button}>
+              profile, please fill{" "}
               <a
-                href='https://docs.google.com/forms/d/e/1FAIpQLSdpADcr-G5z2aSVkfpl_g5qMgFBJw2P3pUgkbpi9YlE6H7kGg/alreadyresponded'
-                style={{ color: "white", textDecoration: "none" }}
-              >
-                Form
+                href="https://docs.google.com/forms/d/e/1FAIpQLSdpADcr-G5z2aSVkfpl_g5qMgFBJw2P3pUgkbpi9YlE6H7kGg/alreadyresponded"
+                style={{ color: "white" }}
+ >
+                this form
               </a>
+              .
             </div>
           </div>
         </>
