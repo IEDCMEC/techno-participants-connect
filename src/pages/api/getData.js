@@ -1,23 +1,14 @@
-import axios from "axios";
 const fs = require("fs");
 import SupabaseClient from "@/utils/SupabaseClient";
 
 const rp = require("request-promise");
 const csvtojson = require("csvtojson");
 
-// export default async function pConnect(req, res) {
-//   const csv = await rp(process.env.SHEET_URL)
-//   const json = await csvtojson().fromString(csv)
-
-//   res.status(200).json({
-//     paricipantDetails: json,
-//   })
-// }
-
 export default async function handler(req, res) {
   const csv = await rp(
     "https://docs.google.com/spreadsheets/d/e/2PACX-1vSbEEYtGwtAz0kzVpoe5qVtOVO1aamYvk3EIqdgSPtHAaGp-2iiDgSppp08Jyu7WuuAaBxbQvTVqrVF/pub?output=csv"
   );
+
   const json = await csvtojson().fromString(csv);
 
   // fs.writeFile("jsonData", JSON.stringify(json), function (err) {
