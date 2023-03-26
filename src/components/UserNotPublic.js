@@ -20,7 +20,7 @@ function UserNotPublic() {
             If you are the owner of this band, please fill your details in{" "}
             <a
               href="https://docs.google.com/forms/d/e/1FAIpQLSdpADcr-G5z2aSVkfpl_g5qMgFBJw2P3pUgkbpi9YlE6H7kGg/viewform"
-              style={{ color: "white"}}
+              style={{ color: "white", textAlign: "center" }}
             >
               this form
             </a>{" "}
