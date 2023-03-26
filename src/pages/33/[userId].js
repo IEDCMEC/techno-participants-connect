@@ -32,7 +32,7 @@ const UserProfile = () => {
     setLoading(true);
     console.log({ userId });
     if (userId) {
-      const res = await axios.get(`/api/users/${userId}`);
+      const res = await axios.get(`/api/getData?id=${userId}`);
       if (res?.data?.user) {
         setUser(res.data.user);
         console.log(res.data.user);
