@@ -23,24 +23,28 @@ const UserProfile = () => {
   const router = useRouter();
   console.log(router);
   const { userId } = router.query;
+  console.log(router.query);
   const [user, setUser] = useState({});
   const [loading, setLoading] = useState(true);
   const [view, setView] = useState(false);
 
   async function fetchUser() {
     setLoading(true);
-    const res = await axios.get(`/api/users/${userId}`);
-
-    if (res?.data?.user) {
-      setUser(res.data.user);
-      console.log(res.data.user);
+    console.log({ userId });
+    if (userId) {
+      const res = await axios.get(`/api/users/${userId}`);
+      if (res?.data?.user) {
+        setUser(res.data.user);
+        console.log(res.data.user);
+      }
+      setLoading(false);
     }
-    setLoading(false);
   }
+
   useEffect(() => {
     fetchUser();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userId]);
+
   if (loading) return <Loader />;
   if (!user.Name) return <UserNotPublic />;
   return (
