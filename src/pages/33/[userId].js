@@ -1,10 +1,10 @@
 /* eslint-disable @next/next/no-img-element */
-import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
-import { Loader } from "../../components";
-import Image from "next/image";
-import styles from "../../styles/User.module.css";
-import logo from "../../assets/logo.png";
+import { useRouter } from "next/router"
+import { useEffect, useState } from "react"
+import { Loader } from "../../components"
+import Image from "next/image"
+import styles from "../../styles/User.module.css"
+import logo from "../../assets/logo.png"
 import {
   FaTwitter,
   FaInstagram,
@@ -48,12 +48,11 @@ const UserProfile = () => {
     //     }
     //   })
     // })
-    
-    const { data:registerData } = await SupabaseClient.from("register")
-    .select("*, users(*) ")
-    .eq("band_id", userId)
 
-    
+    const { data: registerData } = await SupabaseClient.from("register")
+      .select("*, users(*) ")
+      .eq("band_id", userId)
+
     const selectedUser = registerData[0]?.users
 
     const json = data
@@ -84,8 +83,6 @@ const UserProfile = () => {
     console.log(userId)
 
     console.log({ participantConnect, users })
-
- 
   }
   useEffect(() => {
     fetchUser()
@@ -94,17 +91,17 @@ const UserProfile = () => {
   }, [userId])
 
   if (loading) return <Loader />
-  if (!user.Name) return <UserNotPublic />
+
 
   return (
     // <div>{JSON.stringify(user)}</div>
     <>
-      {user && (
+      {user ? (
         <>
           {/* <CustomTitle title={user?.Name} /> */}
           <div className={styles.user_profile_container}>
             <div className={styles.user_profile_logo}>
-              <Image src={logo} alt='' />
+              <Image src={logo} alt="" />
             </div>
             <div className={styles.user_profile_card_container}>
               {/* <div className={styles.user_profile_image_container}>
@@ -182,7 +179,7 @@ const UserProfile = () => {
                       window.open(
                         `tel:${user?.["WhatsApp/Mobile Number"]}`,
                         "_blank"
-                      );
+                      )
                     }}
                   />
                 )}
@@ -190,7 +187,7 @@ const UserProfile = () => {
                   <FaLinkedinIn
                     style={{ cursor: "pointer" }}
                     onClick={() => {
-                      window.open(user?.["LinkedIn URL"], "_blank");
+                      window.open(user?.["LinkedIn URL"], "_blank")
                     }}
                   />
                 )}
@@ -198,7 +195,7 @@ const UserProfile = () => {
                   <FaGithub
                     style={{ cursor: "pointer" }}
                     onClick={() => {
-                      window.open(user?.["GitHub URL"], "_blank");
+                      window.open(user?.["GitHub URL"], "_blank")
                     }}
                   />
                 )}
@@ -206,7 +203,7 @@ const UserProfile = () => {
                   <FaDev
                     style={{ cursor: "pointer" }}
                     onClick={() => {
-                      window.open(user?.devfolio, "_blank");
+                      window.open(user?.devfolio, "_blank")
                     }}
                   />
                 )}
@@ -223,16 +220,16 @@ const UserProfile = () => {
               <a
                 href="https://docs.google.com/forms/d/e/1FAIpQLSdpADcr-G5z2aSVkfpl_g5qMgFBJw2P3pUgkbpi9YlE6H7kGg/alreadyresponded"
                 style={{ color: "white" }}
- >
+              >
                 this form
               </a>
               .
             </div>
           </div>
         </>
-      )}
+      ): <UserNotPublic />}
     </>
-  );
-};
+  )
+}
 
-export default UserProfile;
+export default UserProfile
