@@ -15,7 +15,9 @@ const csvtojson = require("csvtojson");
 // }
 
 export default async function handler(req, res) {
-  const csv = await rp(process.env.SHEET_URL);
+  const csv = await rp(
+    "https://docs.google.com/spreadsheets/d/e/2PACX-1vSbEEYtGwtAz0kzVpoe5qVtOVO1aamYvk3EIqdgSPtHAaGp-2iiDgSppp08Jyu7WuuAaBxbQvTVqrVF/pub?output=csv"
+  );
   const json = await csvtojson().fromString(csv);
 
   // fs.writeFile("jsonData", JSON.stringify(json), function (err) {
